@@ -1,0 +1,13 @@
+I believe it's kind of late but I should write this
+
+Problem: io.jsonwebtoken.PrematureJwtException
+Possible Solutions:
+    - ensure the expiration date and notBefore date are the same
+    - Stop using old JWTs, the parser finds out that the JWT we are using has been created before
+            even the application started. Login and use the current JWT. This fixed it
+
+
+
+
+
+
