@@ -2,18 +2,19 @@ package com.Royal.Main.persistence.entity;
 
 import com.Royal.Main.persistence.entity.enums.MerchandiseCategory;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.Date;
 
 @Entity
-@Data
+@Builder
+@Setter @Getter
+@AllArgsConstructor @NoArgsConstructor
+@EqualsAndHashCode
 @ToString(exclude = {"merchant"})
 public class Merchandise {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     @Enumerated(EnumType.STRING)
@@ -26,6 +27,7 @@ public class Merchandise {
     private String merchDescription;
 
     private Integer currentStockQuantity;
+
 
     private String imageLocation;
 

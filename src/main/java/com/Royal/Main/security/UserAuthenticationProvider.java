@@ -14,6 +14,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -25,6 +26,7 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final Logger logger = LoggerFactory.getLogger(UserAuthenticationProvider.class);
+    private final JWTUtil jwtUtil;
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
@@ -40,7 +42,9 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
         if (optionalUser.isPresent()) {
             if (passwordEncoder.matches(givenPassword, optionalUser.get().getPassword())) {
                 logger.info("User has been authenticated");
-                return new UsernamePasswordAuthenticationToken(givenEmail, givenPassword, this.getGrantedList(optionalUser.get()));
+                UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(givenEmail, givenPassword, this.getGrantedList(optionalUser.get()));
+                jwtUtil.createJWTGenerator(token);
+                return token;
             }
         }
 
@@ -50,20 +54,14 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     public boolean supports(Class<?> authentication) {
-        return false;
+        return UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication);
     }
-
-
-
-
-
 
     //Gets the list of granted authorities of the user
     public List<GrantedAuthority> getGrantedList(User userInfo){
-        List<GrantedAuthority> list = userInfo.getRoles()
-                .stream()
-                .map(role -> new SimpleGrantedAuthority(role.toString()))
-                .collect(Collectors.toList());
+        List<GrantedAuthority> list = new ArrayList<>();
+        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(userInfo.getRole().getGivenRole());
+        list.add(authority);
         return list;
     }
 }

@@ -71,7 +71,7 @@ public class UserAuthenticationServiceImpl implements UserAuthenticationService 
                 .isAccountLocked(false)
                 .registrationDate(LocalDate.now())
                 .userFinancials(null)
-                .roles(Collections.singletonList(roleUtility.getUserRole()))
+                .role(roleUtility.getUserRole())
                 .build();
 
         //saves the user into the repository

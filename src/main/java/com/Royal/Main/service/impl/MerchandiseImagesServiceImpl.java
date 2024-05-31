@@ -27,11 +27,9 @@ public class MerchandiseImagesServiceImpl implements MerchandiseImagesService {
     }
 
     //TODO: start filling the data for clothes..
-
     @Override
     public List<Resource> retrieveImages(int[] idArray) {
         List<Resource> resourceList = new ArrayList<>();
-
         for (int id: idArray) {
             resourceList.add(this.getSingleImage(id));
         }

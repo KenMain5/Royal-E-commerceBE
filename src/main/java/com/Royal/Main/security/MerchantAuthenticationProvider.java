@@ -16,26 +16,26 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 @Component
-@Qualifier("customMerchantAuthManager")
 @AllArgsConstructor
+@Transactional
 public class MerchantAuthenticationProvider implements AuthenticationProvider {
 
     private final PasswordEncoder passwordEncoder;
     private final MerchantRepository merchantRepository;
-    private final UserRepository userRepository;
     private final RoleUtility roleUtility;
     private final Logger logger = LoggerFactory.getLogger(MerchantAuthenticationProvider.class);
+    private final JWTUtil jwtUtil;
 
     @Override
     public boolean supports(Class<?> authentication) {
-
-        return false;
+        return UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication);
     }
 
     @Override
@@ -44,13 +44,15 @@ public class MerchantAuthenticationProvider implements AuthenticationProvider {
         String givenPassword = authentication.getCredentials().toString();
 
         //gets the user information from the database
-        Optional<Merchant> optionalMerchant = merchantRepository.findMerchantByEmail(givenEmail);
+        Optional<Merchant> optionalMerchant = merchantRepository.getMerchantByEmail(givenEmail);
 
         //checks the credentials and does the authentication process
         if (optionalMerchant.isPresent()) {
             if (passwordEncoder.matches(givenPassword, optionalMerchant.get().getPassword())) {
                 logger.info("Merchant has been authenticated");
-                return new UsernamePasswordAuthenticationToken(givenEmail, givenPassword, this.getGrantedList());
+                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(givenEmail, givenPassword, this.getGrantedList());
+                jwtUtil.createJWTGenerator(authenticationToken);
+                return authenticationToken;
             }
         }
         logger.info("Merchant provided wrong credentials");

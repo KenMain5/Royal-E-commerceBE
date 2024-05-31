@@ -1,6 +1,7 @@
 package com.Royal.Main.controller;
 
 import com.Royal.Main.persistence.dto.MerchandiseCreateDTO;
+import com.Royal.Main.persistence.dto.MerchandiseReadDTO;
 import com.Royal.Main.persistence.entity.Merchandise;
 import com.Royal.Main.service.exceptions.MerchantNotFoundException;
 import com.Royal.Main.service.impl.MerchandiseServiceImpl;
@@ -21,7 +22,6 @@ import java.util.List;
 public class MerchandiseController {
 
     private final MerchandiseServiceImpl merchandiseServiceImpl;
-    private final Logger logger = LoggerFactory.getLogger(MerchandiseController.class);
 
     @Autowired
     public MerchandiseController(MerchandiseServiceImpl merchandiseServiceImpl) {
@@ -38,7 +38,7 @@ public class MerchandiseController {
     public ResponseEntity addMerchandise(@RequestPart("merchandiseCreateDTO") List<MerchandiseCreateDTO> merchandiseCreateDTOs,
                                          @RequestPart("merchImage") List<MultipartFile> merchImages) throws MerchantNotFoundException, IOException {
             merchandiseServiceImpl.addMerchandises(merchandiseCreateDTOs, merchImages);
-        return ResponseEntity.badRequest().build();
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @DeleteMapping(value = "/delete", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -48,7 +48,10 @@ public class MerchandiseController {
     }
 
     @GetMapping(value = "/test")
-    public ResponseEntity<String> getTestResults(){
-        return new ResponseEntity<>("this is a test endpoint", HttpStatus.CREATED);
+    public ResponseEntity<MerchandiseReadDTO> getTestResults() throws MerchantNotFoundException {
+
+        MerchandiseReadDTO merchandiseReadDTO = merchandiseServiceImpl.getSingleMerchandiseCreatedByMerchant("merchantt@gmail.com");
+
+        return new ResponseEntity<>(merchandiseReadDTO, HttpStatus.CREATED);
     }
 }

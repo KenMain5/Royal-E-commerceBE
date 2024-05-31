@@ -16,8 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @Table(name="users")
 public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     private String email;
@@ -40,13 +39,8 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<UserFinancial> userFinancials;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(
-            name="user_roles",
-            joinColumns= @JoinColumn(name= "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
-    private List<Role> roles;
+    @ManyToOne
+    private Role role;
 
     @OneToMany(mappedBy = "user")
     private List<PurchaseOrder> purchaseOrders;

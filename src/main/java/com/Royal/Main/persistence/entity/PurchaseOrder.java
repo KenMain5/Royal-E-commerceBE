@@ -14,8 +14,7 @@ import java.util.UUID;
 @Data
 @ToString(exclude = {"user"})
 public class PurchaseOrder {
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     private UUID orderNumber;

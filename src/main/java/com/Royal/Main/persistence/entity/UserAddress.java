@@ -6,8 +6,7 @@ import lombok.Data;
 @Entity
 @Data
 public class UserAddress {
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     //TODO: change this into zipcode, address 1, address 2, city, state

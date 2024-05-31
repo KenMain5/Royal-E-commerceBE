@@ -5,12 +5,15 @@ import com.Royal.Main.persistence.entity.Merchant;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.util.Date;
 
 @Data
+@Builder
 public class MerchandiseReadDTO {
     @Enumerated(EnumType.STRING)
     private MerchandiseCategory category;
@@ -31,8 +34,8 @@ public class MerchandiseReadDTO {
     private Date dateAdded;
 
     @NotNull
-    private Merchant merchant;
+    private String merchantName;
 
     @NotNull
-    private MultipartFile merchImage;
+    private File merchImage;
 }

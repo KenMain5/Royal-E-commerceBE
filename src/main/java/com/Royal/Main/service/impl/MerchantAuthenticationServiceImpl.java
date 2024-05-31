@@ -78,6 +78,8 @@ public class MerchantAuthenticationServiceImpl implements MerchantAuthentication
         return merchantRepository.existsByEmail(email);
     }
 
+
+
     @Override
     public void deleteMerchantAccount(MerchantDTO merchantDTO) {
         //Merchant merchant = merchantRepository.findMerchantByName(merchantDTO.getMerchantName())

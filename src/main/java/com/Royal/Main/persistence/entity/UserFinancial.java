@@ -8,8 +8,7 @@ import lombok.ToString;
 @Data
 @ToString(exclude = "user")
 public class UserFinancial {
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
 
     private int cardData;

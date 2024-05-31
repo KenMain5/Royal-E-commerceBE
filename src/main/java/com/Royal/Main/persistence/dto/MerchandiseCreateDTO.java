@@ -1,9 +1,11 @@
 package com.Royal.Main.persistence.dto;
 
 import com.Royal.Main.persistence.entity.enums.MerchandiseCategory;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+
 public class MerchandiseCreateDTO {
         //@Enumerated(EnumType.STRING)
         private MerchandiseCategory category;

@@ -9,8 +9,7 @@ import lombok.ToString;
 @ToString(exclude = {"merchandise"})
 public class MerchandiseImage {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     private byte[] imageBytes;

@@ -5,7 +5,7 @@ public class EmailAlreadyTakenException extends Exception{
     private String email;
 
     public EmailAlreadyTakenException( String email) {
-        super("The email " + email + "is already taken");
+        super("The email " + email + " was already taken");
         this.email = email;
     }
 }

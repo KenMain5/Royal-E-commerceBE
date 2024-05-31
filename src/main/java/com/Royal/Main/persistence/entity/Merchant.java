@@ -16,8 +16,7 @@ import java.util.List;
 @EqualsAndHashCode
 @Builder
 public class Merchant {
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     @NotNull
@@ -41,6 +40,6 @@ public class Merchant {
     @OneToMany(mappedBy = "merchant", cascade = CascadeType.ALL)
     private List<Merchandise> merchandises;
 
-    @OneToOne
+    @ManyToOne
     private Role role;
 }

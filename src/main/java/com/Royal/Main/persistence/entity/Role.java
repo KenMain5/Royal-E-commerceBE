@@ -1,27 +1,25 @@
 package com.Royal.Main.persistence.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.List;
 
 @Entity
-@Data
-@ToString(exclude = {"users"})
+@Builder
+@Setter @Getter
+@AllArgsConstructor @NoArgsConstructor
+@ToString(exclude = {"users", "merchants"}) @EqualsAndHashCode
 public class Role {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     private String givenRole;
 
-    @ManyToMany(mappedBy = "roles")
+    @OneToMany
     private List<User> users;
 
-    @OneToOne
-    private Merchant merchant;
+    @OneToMany(mappedBy = "role")
+    private List<Merchant> merchants;
 }
