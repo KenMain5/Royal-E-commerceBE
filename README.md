@@ -2,20 +2,42 @@
 
 This is the backend for Royal, an exclusive clothing store app. 
 
-<h2>Features</h2>
+<h2>Biggest Takeaway</h2>
+Through this project, I've significantly strengthened my Java foundations. Specifically, I've improved my ability to interpret API documentation and embraced the principle that methods should be minimal for easier testing and debugging. This realization was pivotal; it taught me that overly complex methods can be challenging to test and more prone to errors.
 
-<div>
-  <ul>
-    <li>Supports robust transactional mechanisms to ensure reliable and consistent operations, crucial for order processing and inventory management. Includes built-in retry capabilities to handle transient failures effectively</li>
-    <li>Implements Spring Security to provide comprehensive security measures, including advanced authentication and authorization through JWTs (JSON Web Tokens).</li>
-    <li>Ensures reliable and consistent operations, crucial for order processing and inventory management.</li>
-    <li>Utilizes JPA for efficient and effective database interactions, ensuring optimal performance and scalability.</li>
-    <li>Features a comprehensive global exception handler that streamlines error management, providing clear, actionable feedback and maintaining stability.</li>
+<br>Moreover, delving into Spring Security has deepened my understanding of how an HttpRequest traverses through the servlet container, transforms into an HttpServlet Request, passes through various filters, and interacts with the application. This has been enlightening in grasping the comprehensive flow of HTTP requests within a web application.
 
 
-  </ul>
-</div>
+<Takeaway> 
+<h2>Takeaway</h2>
+  
+<details>
+  <summary>Controller</summary>
+    <ul>
+    &nbsp;<li>Consumes Attribute, MediaType</li>
+    &nbsp;<li>Generating HttpHeader for JWT</li>
+    &nbsp;<li>DTOs and Validation Constraints</li>
+    </ul>
+</details>
 
+<details>
+  <summary>Security Configuration</summary>
+    <ul>
+    &nbsp;<li>JWT Implementation</li>
+    &nbsp;<li>How to fix circular dependency</li>
+    </ul>
+</details>
+
+  
+<details>
+  <summary>Services</summary>
+    <ul>
+    &nbsp;<li>Global Exception Handler</li>
+    &nbsp;<li>Custom Exceptions</li>
+    </ul>
+</details>
+
+  
 
 ## Installation
 <a id='install'></a>
