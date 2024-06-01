@@ -4,7 +4,7 @@ import com.Royal.Main.persistence.entity.enums.MerchandiseCategory;
 import com.Royal.Main.persistence.entity.Merchant;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,27 +15,31 @@ import java.util.Date;
 @Data
 @Builder
 public class MerchandiseReadDTO {
+    @NotBlank
     @Enumerated(EnumType.STRING)
     private MerchandiseCategory category;
 
-    @NotNull //below 5000
+    @NotBlank
+    @Min(value = 700) @Max(value = 5000)
     private Double merchPrice;
 
-    @NotNull //min, max count of string
+    @NotBlank
     private String merchName;
 
-    @NotNull //min, max count
+    @NotBlank
+    @Size(min = 50, max = 1500)
     private String merchDescription;
 
-    @NotNull //?
+    @NotBlank
+    @Min(value = 0) @Max(value = 100)
     private Integer currentStockQuantity;
 
-    @NotNull
+    @NotBlank
     private Date dateAdded;
 
-    @NotNull
+    @NotBlank
     private String merchantName;
 
-    @NotNull
-    private File merchImage;
+    @NotBlank
+    private String merchImageURL;
 }

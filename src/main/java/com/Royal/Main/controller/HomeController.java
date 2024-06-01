@@ -25,9 +25,6 @@ public class HomeController {
     private final HomeServiceImpl homeService;
     private final JWTUtil jwtUtil;
 
-
-
-
     @GetMapping(value = "/home/", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity getHomePage(){
         //TODO: move all this to the implementation
@@ -35,7 +32,6 @@ public class HomeController {
         mainPageContent.setBannerContent(homeService.getBanner());
         mainPageContent.setMerchandises(homeService.getAllMerch());
         mainPageContent.setHeroContent(homeService.getHeroContent());
-
         return ResponseEntity.ok(mainPageContent);
     }
 
@@ -46,16 +42,9 @@ public class HomeController {
         //need method to grab items of that category..
     }
 
-    @GetMapping("/")
-    public ResponseEntity testing123(){
-        //it goes here after login..
-        //call the JWT from here?
-        return new ResponseEntity("testing", HttpStatus.ACCEPTED);
-    }
-
     @PostMapping("login/success")
     public ResponseEntity successfulLogin(){
-        return new ResponseEntity(HttpStatus.CREATED);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     @GetMapping("/user/cart")

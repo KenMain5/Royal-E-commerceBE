@@ -5,8 +5,6 @@ import com.Royal.Main.persistence.dto.MerchandiseReadDTO;
 import com.Royal.Main.persistence.entity.Merchandise;
 import com.Royal.Main.service.exceptions.MerchantNotFoundException;
 import com.Royal.Main.service.impl.MerchandiseServiceImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -28,12 +26,6 @@ public class MerchandiseController {
         this.merchandiseServiceImpl = merchandiseServiceImpl;
     }
 
-    //TODO: what is this? Should this be removed?
-    @GetMapping(value = "/get", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Merchandise>> getMerchandise(){
-        return null;
-    }
-
     @PostMapping(value = "/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity addMerchandise(@RequestPart("merchandiseCreateDTO") List<MerchandiseCreateDTO> merchandiseCreateDTOs,
                                          @RequestPart("merchImage") List<MultipartFile> merchImages) throws MerchantNotFoundException, IOException {
@@ -49,9 +41,7 @@ public class MerchandiseController {
 
     @GetMapping(value = "/test")
     public ResponseEntity<MerchandiseReadDTO> getTestResults() throws MerchantNotFoundException {
-
         MerchandiseReadDTO merchandiseReadDTO = merchandiseServiceImpl.getSingleMerchandiseCreatedByMerchant("merchantt@gmail.com");
-
         return new ResponseEntity<>(merchandiseReadDTO, HttpStatus.CREATED);
     }
 }

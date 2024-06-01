@@ -8,6 +8,5 @@ import java.util.UUID;
 
 @Repository
 public interface PurchaseOrderRepository extends JpaRepository<PurchaseOrder, Long> {
-    PurchaseOrder existsPurchaseOrderByOrderNumber(UUID orderNumber);
     PurchaseOrder findPurchaseOrderByOrderNumber(UUID orderNumber);
 }

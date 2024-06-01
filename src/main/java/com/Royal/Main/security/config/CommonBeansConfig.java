@@ -25,8 +25,6 @@ import java.util.List;
 @EnableTransactionManagement
 public class CommonBeansConfig {
 
-
-
     @Bean
     public PasswordEncoder createPasswordEncoder(){
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
@@ -41,6 +39,4 @@ public class CommonBeansConfig {
     public UserLoginAuthenticationPoint userLoginAuthenticationPoint(){
         return new UserLoginAuthenticationPoint("/user/login");
     }
-
-
 }

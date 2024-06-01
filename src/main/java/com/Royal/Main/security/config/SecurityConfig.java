@@ -50,7 +50,6 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain userSecurityFilterChain(HttpSecurity http) throws Exception {
 
-        http.addFilterBefore(jwtVerificationFilter, UsernamePasswordAuthenticationFilter.class);
         //Authorization Configuration
         http.authorizeHttpRequests((requests) -> {
             requests
@@ -58,15 +57,14 @@ public class SecurityConfig {
                     .requestMatchers("/user/login", "/user/register").permitAll()
                     .requestMatchers("/merchant/register").permitAll()
                     .requestMatchers("/merchant/merchandise/test").permitAll()
-
-
+                    .requestMatchers("/images/**").permitAll()
                     .requestMatchers("/login/success").authenticated()
                     .requestMatchers("/merchant/merchandise/**").authenticated()
-
-                    //Testing
                     .requestMatchers("/user/cart").authenticated()
                     .requestMatchers("/purchase/**").authenticated();
         });
+
+
 
         //Authentication Configuration
         /* longest time I've spent on a bug, and finally got a better chance at using debugger
@@ -116,8 +114,8 @@ public class SecurityConfig {
         http.csrf((csrf) -> csrf.disable());
 //
         http.httpBasic(Customizer.withDefaults());
-
-
+        http.addFilterBefore(jwtVerificationFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterAfter(jwtCreationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
