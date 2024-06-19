@@ -113,7 +113,6 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
             PageRequest pageable = PageRequest.of(page, 5, Sort.by("orderPlaced").descending());
             return purchaseOrderRepository.findAll(pageable);
         }
-
         return null;
     }
 }

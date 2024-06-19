@@ -12,6 +12,7 @@ import java.util.UUID;
 
 @Service
 public class MerchandiseUtil {
+    //this can't be a util. remove this.
     private final MerchandiseRepository merchandiseRepository;
 
     @Autowired

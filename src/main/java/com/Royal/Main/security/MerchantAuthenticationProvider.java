@@ -2,13 +2,11 @@ package com.Royal.Main.security;
 
 import com.Royal.Main.persistence.entity.Merchant;
 import com.Royal.Main.repository.MerchantRepository;
-import com.Royal.Main.repository.UserRepository;
 import com.Royal.Main.service.exceptions.AuthenticationException;
 import com.Royal.Main.service.util.RoleUtility;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -51,7 +49,7 @@ public class MerchantAuthenticationProvider implements AuthenticationProvider {
             if (passwordEncoder.matches(givenPassword, optionalMerchant.get().getPassword())) {
                 logger.info("Merchant has been authenticated");
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(givenEmail, givenPassword, this.getGrantedList());
-                jwtUtil.createJWTGenerator(authenticationToken);
+                jwtUtil.createJWT(authenticationToken);
                 return authenticationToken;
             }
         }

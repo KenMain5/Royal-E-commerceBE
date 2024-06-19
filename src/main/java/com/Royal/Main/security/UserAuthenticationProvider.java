@@ -17,7 +17,6 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -43,7 +42,7 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
             if (passwordEncoder.matches(givenPassword, optionalUser.get().getPassword())) {
                 logger.info("User has been authenticated");
                 UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(givenEmail, givenPassword, this.getGrantedList(optionalUser.get()));
-                jwtUtil.createJWTGenerator(token);
+                jwtUtil.createJWT(token);
                 return token;
             }
         }

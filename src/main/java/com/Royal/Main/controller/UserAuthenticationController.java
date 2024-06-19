@@ -1,5 +1,6 @@
 package com.Royal.Main.controller;
 
+import com.Royal.Main.service.exceptions.ObjectNotSavedException;
 import com.Royal.Main.service.impl.UserAuthenticationServiceImpl;
 import com.Royal.Main.service.exceptions.AuthenticationException;
 import com.Royal.Main.service.exceptions.EmailAlreadyTakenException;
@@ -22,7 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserAuthenticationController {
 
     private final UserAuthenticationServiceImpl authenticationServiceImpl;
-    private final Logger logger = LoggerFactory.getLogger(UserAuthenticationController.class);
 
     @Autowired
     public UserAuthenticationController(UserAuthenticationServiceImpl authenticationServiceImpl) {
@@ -30,15 +30,14 @@ public class UserAuthenticationController {
     }
 
     @PostMapping(value = "/user/register", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity registerUser(@RequestBody RegistrationDTO registrationDTO) throws EmailAlreadyTakenException {
+    public ResponseEntity registerUser(@RequestBody RegistrationDTO registrationDTO) throws EmailAlreadyTakenException, ObjectNotSavedException {
         authenticationServiceImpl.createUserAccount(registrationDTO);
         return new ResponseEntity("The account has now been created", HttpStatus.CREATED);
     }
 
-    //@Valid
     @PostMapping(value = "/user/login", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity loginUser(@RequestBody LoginDTO loginDTO) throws AuthenticationException{
-        logger.info("UserAuthentication:: loginUser - this is the login information" + loginDTO);
+        log.info("UserAuthentication:: loginUser - this is the login information" + loginDTO);
         String token = authenticationServiceImpl.login(loginDTO);
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Authorization", "Bearer " + token);

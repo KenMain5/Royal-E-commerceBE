@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
-
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +25,6 @@ public class MerchandiseImagesServiceImpl implements MerchandiseImagesService {
         this.merchandiseRepository = merchandiseRepository;
     }
 
-    //TODO: start filling the data for clothes..
     @Override
     public List<Resource> retrieveImages(int[] idArray) {
         List<Resource> resourceList = new ArrayList<>();

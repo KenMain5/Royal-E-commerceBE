@@ -4,9 +4,7 @@ import com.Royal.Main.persistence.entity.enums.MerchandiseCategory;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.*;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NonNull;
 
 @Data
 public class MerchandiseCreateDTO {

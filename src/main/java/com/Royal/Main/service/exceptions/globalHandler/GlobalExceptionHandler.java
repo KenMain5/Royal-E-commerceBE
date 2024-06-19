@@ -47,9 +47,4 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleJwtException(AuthenticationException ex, WebRequest request){
         return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
-
-
-
-
-    //TODO: for these as well? ServletException
 }

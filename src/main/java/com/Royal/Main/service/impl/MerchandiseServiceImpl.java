@@ -7,9 +7,7 @@ import com.Royal.Main.persistence.entity.Merchant;
 import com.Royal.Main.repository.MerchandiseRepository;
 import com.Royal.Main.repository.MerchantRepository;
 import com.Royal.Main.service.MerchandiseService;
-import com.Royal.Main.service.exceptions.MerchandiseNotFoundException;
-import com.Royal.Main.service.exceptions.MerchandiseNotInStockException;
-import com.Royal.Main.service.exceptions.MerchantNotFoundException;
+import com.Royal.Main.service.exceptions.*;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,21 +27,25 @@ import java.util.Optional;
 
 @Service
 @Slf4j
-@AllArgsConstructor
+
 //@EnableRetry
 public class MerchandiseServiceImpl implements MerchandiseService {
 
     private final MerchandiseRepository merchandiseRepository;
-    private final MerchantRepository merchantRepository;
     private final MerchantServiceImpl merchantService;
-    //TODO: put these in application.properties
     private final String fileSystemURL = "/Users/main/Desktop/SpringRoyalStore/ImagesFileSystem/";
     private final String productionFileSystemURL = "/imagesFileSystem/";
+
+    @Autowired
+    public MerchandiseServiceImpl(MerchandiseRepository merchandiseRepository, MerchantServiceImpl merchantService) {
+        this.merchandiseRepository = merchandiseRepository;
+        this.merchantService = merchantService;
+    }
 
     @Override
     @Transactional
     public void addMerchandises(List<MerchandiseCreateDTO> merchandiseCreateDTOs,
-                                          List<MultipartFile> imageFiles) throws IOException, MerchantNotFoundException{
+                                          List<MultipartFile> imageFiles) throws IOException, MerchantNotFoundException, ObjectNotSavedException {
         for (int i = 0; i < merchandiseCreateDTOs.size(); i++) {
             //Simplifying the variable names
             MerchandiseCreateDTO currentDTO = merchandiseCreateDTOs.get(i);
@@ -57,41 +59,23 @@ public class MerchandiseServiceImpl implements MerchandiseService {
 
             //transfers data from the DTO to the merchandise object to be stored
             Merchandise merchandise = this.createMerchandiseFromDTO(currentDTO, merchant, filePath);
-            Merchandise savedMerchandise = merchandiseRepository.save(merchandise);
+            this.saveMerchandise(merchandise);
 
-
-            if (savedMerchandise != null) {
-                currentImageFile.transferTo(new File(filePath));
-            }
+            currentImageFile.transferTo(new File(filePath));
         }
-    }
-
-    protected Merchandise createMerchandiseFromDTO(MerchandiseCreateDTO merchandiseCreateDTO, Merchant merchant, String filePath){
-        return Merchandise.builder()
-                .merchName(merchandiseCreateDTO.getMerchName())
-                .merchPrice(merchandiseCreateDTO.getMerchPrice())
-                .merchDescription(merchandiseCreateDTO.getMerchDescription())
-                .currentStockQuantity(merchandiseCreateDTO.getCurrentStockQuantity())
-                .category(merchandiseCreateDTO.getCategory())
-                .merchant(merchant)
-                .dateAdded(new Date())
-                .imageLocation(filePath)
-                .build();
     }
 
     @Override
 //    @Transactional
-    public void removeMerchandises(List<MerchandiseCreateDTO> merchandiseCreateDTOS) {
+    public void removeMerchandises(List<MerchandiseCreateDTO> merchandiseCreateDTOS) throws MerchandiseNotFoundException {
         for (MerchandiseCreateDTO merchandiseCreateDTO : merchandiseCreateDTOS){
             String merchandiseName = merchandiseCreateDTO.getMerchName();
 
-            Optional<Merchandise> optionalMerchandise = merchandiseRepository.findByMerchName(merchandiseName);
-            if (optionalMerchandise.isPresent()) {
-                merchandiseRepository.deleteByMerchName(merchandiseName);
-                String filePath = optionalMerchandise.get().getImageLocation();
-                File file = new File(filePath);
-                file.delete();
-            }
+            Merchandise merchandise = this.findMerchandiseByMerchName(merchandiseName);
+            merchandiseRepository.deleteByMerchName(merchandiseName);
+            String filePath = merchandise.getImageLocation();
+            File file = new File(filePath);
+            file.delete();
         }
     }
 
@@ -112,24 +96,61 @@ public class MerchandiseServiceImpl implements MerchandiseService {
         //TODO: Not Urgent: get image data from the URL file
     }
 
+
+    //What is this??
     @Override
     public MerchandiseReadDTO getSingleMerchandiseCreatedByMerchant(String email) throws MerchantNotFoundException {
         Merchant merchant = merchantService.getMerchantByEmail(email);
+        List<Merchandise> merchandiseList = this.getMerchandiseListByMerchant(merchant);
+        Merchandise merchandise = merchandiseList.get(0);
+
+        return MerchandiseReadDTO.builder()
+                .category(merchandise.getCategory())
+                .merchPrice(merchandise.getMerchPrice())
+                .merchName(merchandise.getMerchName())
+                .merchDescription(merchandise.getMerchDescription())
+                .currentStockQuantity(merchandise.getCurrentStockQuantity())
+                .dateAdded(merchandise.getDateAdded())
+                .merchantName(merchandise.getMerchant().getName())
+                .merchImageURL(merchandise.getImageLocation())
+                .build();
+    }
+
+    public List<Merchandise> getMerchandiseListByMerchant(Merchant merchant) throws MerchantNotFoundException {
         Optional<List<Merchandise>> optionalMerchandiseList = merchandiseRepository.findMerchandisesByMerchant(merchant);
         if (optionalMerchandiseList.isPresent()) {
-            Merchandise merchandise = optionalMerchandiseList.get().get(0);
-
-            return MerchandiseReadDTO.builder()
-                    .category(merchandise.getCategory())
-                    .merchPrice(merchandise.getMerchPrice())
-                    .merchName(merchandise.getMerchName())
-                    .merchDescription(merchandise.getMerchDescription())
-                    .currentStockQuantity(merchandise.getCurrentStockQuantity())
-                    .dateAdded(merchandise.getDateAdded())
-                    .merchantName(merchandise.getMerchant().getName())
-                    .merchImageURL(merchandise.getImageLocation())
-                    .build();
+            return optionalMerchandiseList.get();
+        } else {
+            throw new MerchantNotFoundException();
         }
-        return null;
+    }
+
+    public Merchandise findMerchandiseByMerchName(String merchandiseName) throws MerchandiseNotFoundException {
+        Optional<Merchandise> optionalMerchandise = merchandiseRepository.findByMerchName(merchandiseName);
+        if (optionalMerchandise.isPresent()) {
+            return optionalMerchandise.get();
+        } else {
+            throw new MerchandiseNotFoundException(merchandiseName);
+        }
+    }
+
+    public void saveMerchandise(Merchandise merchandise) throws ObjectNotSavedException {
+        Merchandise savedMerchandise = merchandiseRepository.save(merchandise);
+        if (savedMerchandise == null) {
+            throw new ObjectNotSavedException();
+        }
+    }
+
+    protected Merchandise createMerchandiseFromDTO(MerchandiseCreateDTO merchandiseCreateDTO, Merchant merchant, String filePath){
+        return Merchandise.builder()
+                .merchName(merchandiseCreateDTO.getMerchName())
+                .merchPrice(merchandiseCreateDTO.getMerchPrice())
+                .merchDescription(merchandiseCreateDTO.getMerchDescription())
+                .currentStockQuantity(merchandiseCreateDTO.getCurrentStockQuantity())
+                .category(merchandiseCreateDTO.getCategory())
+                .merchant(merchant)
+                .dateAdded(new Date())
+                .imageLocation(filePath)
+                .build();
     }
 }

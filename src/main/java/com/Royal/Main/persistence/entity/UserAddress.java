@@ -9,7 +9,6 @@ public class UserAddress {
     @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    //TODO: change this into zipcode, address 1, address 2, city, state
     private String address;
 
     @OneToOne

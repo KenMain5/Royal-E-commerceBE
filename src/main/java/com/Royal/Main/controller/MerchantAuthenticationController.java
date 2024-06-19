@@ -4,8 +4,8 @@ import com.Royal.Main.persistence.dto.LoginDTO;
 import com.Royal.Main.persistence.dto.MerchantDTO;
 import com.Royal.Main.service.MerchantAuthenticationService;
 import com.Royal.Main.service.exceptions.EmailAlreadyTakenException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.Royal.Main.service.exceptions.ObjectNotSavedException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -16,10 +16,10 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/merchant")
+@Slf4j
 public class MerchantAuthenticationController {
 
     private final MerchantAuthenticationService merchantAuthenticationService;
-    private final Logger logger = LoggerFactory.getLogger(MerchantAuthenticationController.class);
 
     @Autowired
     public MerchantAuthenticationController(MerchantAuthenticationService merchantAuthenticationService) {
@@ -27,8 +27,8 @@ public class MerchantAuthenticationController {
     }
 
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> addMerchant(@RequestBody MerchantDTO merchantDTO) throws EmailAlreadyTakenException {
-        logger.info("User attempting to register an account" + merchantDTO.toString());
+    public ResponseEntity<String> addMerchant(@RequestBody MerchantDTO merchantDTO) throws EmailAlreadyTakenException, ObjectNotSavedException {
+        log.info("User attempting to register an account" + merchantDTO.toString());
         merchantAuthenticationService.createMerchantAccount(merchantDTO);
         return new ResponseEntity<>("Merchant Account is now created", HttpStatus.CREATED);
     }

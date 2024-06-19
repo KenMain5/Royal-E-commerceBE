@@ -1,9 +1,9 @@
 package com.Royal.Main.controller;
 
 import com.Royal.Main.persistence.dto.MerchandiseCreateDTO;
-import com.Royal.Main.persistence.dto.MerchandiseReadDTO;
-import com.Royal.Main.persistence.entity.Merchandise;
+import com.Royal.Main.service.exceptions.MerchandiseNotFoundException;
 import com.Royal.Main.service.exceptions.MerchantNotFoundException;
+import com.Royal.Main.service.exceptions.ObjectNotSavedException;
 import com.Royal.Main.service.impl.MerchandiseServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,20 +28,14 @@ public class MerchandiseController {
 
     @PostMapping(value = "/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity addMerchandise(@RequestPart("merchandiseCreateDTO") List<MerchandiseCreateDTO> merchandiseCreateDTOs,
-                                         @RequestPart("merchImage") List<MultipartFile> merchImages) throws MerchantNotFoundException, IOException {
+                                         @RequestPart("merchImage") List<MultipartFile> merchImages) throws MerchantNotFoundException, IOException, ObjectNotSavedException {
             merchandiseServiceImpl.addMerchandises(merchandiseCreateDTOs, merchImages);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @DeleteMapping(value = "/delete", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity deleteAllMerchandise(List<MerchandiseCreateDTO> merchandiseCreateDTOS){
+    public ResponseEntity deleteAllMerchandise(List<MerchandiseCreateDTO> merchandiseCreateDTOS) throws MerchandiseNotFoundException {
         merchandiseServiceImpl.removeMerchandises(merchandiseCreateDTOS);
             return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping(value = "/test")
-    public ResponseEntity<MerchandiseReadDTO> getTestResults() throws MerchantNotFoundException {
-        MerchandiseReadDTO merchandiseReadDTO = merchandiseServiceImpl.getSingleMerchandiseCreatedByMerchant("merchantt@gmail.com");
-        return new ResponseEntity<>(merchandiseReadDTO, HttpStatus.CREATED);
     }
 }

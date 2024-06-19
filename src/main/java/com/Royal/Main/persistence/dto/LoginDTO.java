@@ -2,7 +2,6 @@ package com.Royal.Main.persistence.dto;
 
 import jakarta.validation.constraints.*;
 import lombok.Data;
-import lombok.NonNull;
 
 @Data
 public class LoginDTO {
