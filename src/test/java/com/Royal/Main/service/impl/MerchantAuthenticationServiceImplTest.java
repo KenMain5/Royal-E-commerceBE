@@ -4,21 +4,15 @@ import com.Royal.Main.persistence.entity.Merchant;
 import com.Royal.Main.repository.MerchantRepository;
 import com.Royal.Main.security.JWTUtil;
 import com.Royal.Main.security.MerchantAuthenticationProvider;
-import com.Royal.Main.service.MerchantAuthenticationService;
 import com.Royal.Main.service.exceptions.EmailAlreadyTakenException;
 import com.Royal.Main.service.exceptions.ObjectNotSavedException;
 import com.Royal.Main.service.util.RoleUtility;
-import io.jsonwebtoken.lang.Assert;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import java.time.LocalDate;
-
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;

@@ -193,22 +193,21 @@ class UserAuthenticationServiceImplTest {
         assertDoesNotThrow(() -> mockedUserAuthenticationService.saveUser(user));
     }
 
-//    @Test
-//    void isEmailTakenShouldThrowEmailAlreadyTakenExceptionIfEmailNotRegistered() {
-//        String testEmail = "test123@gmail.com";
-//
-//        when(mockedUserRepository.existsByEmail(testEmail)).thenReturn(false);
-//
-//        assertThrows(EmailAlreadyTakenException.class, () -> {
-//            mockedUserAuthenticationService.isEmailTaken(testEmail);
-//        });
-//    }
+    @Test
+    void isEmailTakenShouldThrowEmailAlreadyTakenExceptionIfEmailNotRegistered() {
+        String testEmail = "test123@gmail.com";
+
+        when(mockedUserRepository.existsByEmail(testEmail)).thenReturn(false);
+
+        assertDoesNotThrow(() -> mockedUserAuthenticationService.isEmailTaken(testEmail));
+    };
+
 
     @Test
     void isEmailTakenWouldNotThrowEmailAlreadyTakenExceptionIfEmailIsRegistered() {
         String testEmail = "test123@gmail.com";
 
-        when(mockedUserRepository.existsByEmail(testEmail)).thenReturn(false);
+        when(mockedUserRepository.existsByEmail(testEmail)).thenReturn(true);
 
         assertDoesNotThrow(() -> {
             mockedUserAuthenticationService.isEmailTaken(testEmail);

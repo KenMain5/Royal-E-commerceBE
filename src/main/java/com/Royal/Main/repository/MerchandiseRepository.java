@@ -10,7 +10,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface MerchandiseRepository extends JpaRepository<Merchandise, Long> {
+public interface
+MerchandiseRepository extends JpaRepository<Merchandise, Long> {
     Optional<Merchandise> findMerchandiseByMerchName(String merchname);
 
     void deleteByMerchName(String merchname);
