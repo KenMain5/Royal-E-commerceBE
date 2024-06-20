@@ -209,10 +209,8 @@ class UserAuthenticationServiceImplTest {
 
         when(mockedUserRepository.existsByEmail(testEmail)).thenReturn(true);
 
-        assertDoesNotThrow(() -> {
+        assertThrows(EmailAlreadyTakenException.class, () -> {
             mockedUserAuthenticationService.isEmailTaken(testEmail);
         });
     }
-
-
 }
